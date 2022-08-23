@@ -8,3 +8,5 @@ authors = ["Ali Sajid Imami"]
 
 [dependencies]
 rltk = { version = "0.8.1" }
+specs = "0.18.0"
+specs-derive = "0.4.1"
