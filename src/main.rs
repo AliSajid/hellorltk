@@ -41,6 +41,14 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
 
+    gs = create_player(gs);
+
+    gs = create_mobs(gs, Some(10));
+
+    rltk::main_loop(context, gs)
+}
+
+fn create_player(mut gs: State) -> State {
     // Create Player Entity
     gs.ecs
         .create_entity()
@@ -51,9 +59,14 @@ fn main() -> rltk::BError {
             bg: RGB::named(rltk::BLACK),
         })
         .build();
+    gs
+}
+
+fn create_mobs(mut gs: State, num: Option<i32>) -> State {
+    let n = num.unwrap_or(10);
 
     // Create mob entities
-    for i in 1..=10 {
+    for i in 1..=n {
         gs.ecs
             .create_entity()
             .with(Position { x: i * 7, y: 20 })
@@ -64,10 +77,5 @@ fn main() -> rltk::BError {
             })
             .build();
     }
-
-    rltk::main_loop(context, gs)
-}
-
-fn create_player(mut gs: &State) {
-    todo!("Will Extract Player Creation to its own function")
+    gs
 }
