@@ -1,4 +1,8 @@
-## Unreleased
+## v1.4.0 (2022-08-23)
+
+### Feat
+
+- added the ability for the player to move from input
 
 ## v1.3.0 (2022-08-23)
 
