@@ -7,9 +7,20 @@ struct State {
     ecs: World,
 }
 
+impl State {
+    fn run_systems(&mut self) {
+        let mut lw = LeftWalker {};
+        lw.run_now(&self.ecs);
+        self.ecs.maintain();
+    }
+}
+
 impl GameState for State {
     fn tick(&mut self, ctx: &mut Rltk) {
         ctx.cls();
+
+        self.run_systems();
+
         let positions = self.ecs.read_storage::<Position>();
         let renderables = self.ecs.read_storage::<Renderable>();
 
@@ -35,6 +46,21 @@ struct Renderable {
 #[derive(Component)]
 struct LeftMover {}
 
+struct LeftWalker {}
+
+impl<'a> System<'a> for LeftWalker {
+    type SystemData = (ReadStorage<'a, LeftMover>, WriteStorage<'a, Position>);
+
+    fn run(&mut self, (lefty, mut pos): Self::SystemData) {
+        for (_lefty, pos) in (&lefty, &mut pos).join() {
+            pos.x -= 1;
+            if pos.x < 0 {
+                pos.x = 79
+            }
+        }
+    }
+}
+
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
     let context = RltkBuilder::simple80x50()
@@ -47,7 +73,7 @@ fn main() -> rltk::BError {
 
     gs = create_player(gs);
 
-    gs = create_mobs(gs, Some(10));
+    gs = create_mobs(gs, Some(11));
 
     rltk::main_loop(context, gs)
 }
@@ -79,6 +105,7 @@ fn create_mobs(mut gs: State, num: Option<i32>) -> State {
                 fg: RGB::named(rltk::RED),
                 bg: RGB::named(rltk::BLACK),
             })
+            .with(LeftMover {})
             .build();
     }
     gs
