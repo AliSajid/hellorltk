@@ -32,6 +32,9 @@ struct Renderable {
     bg: RGB,
 }
 
+#[derive(Component)]
+struct LeftMover {}
+
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
     let context = RltkBuilder::simple80x50()
@@ -40,6 +43,7 @@ fn main() -> rltk::BError {
     let mut gs = State { ecs: World::new() };
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
+    gs.ecs.register::<LeftMover>();
 
     gs = create_player(gs);
 
