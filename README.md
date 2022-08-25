@@ -10,7 +10,9 @@ This is a small project based on the
 
 ## Current Status
 
-As of v1.3.0 I am at Chapter 1 of the tutorial. At this point I have a functional world where there are movable mobs and renderable player.
+As of v1.5.0 I am at Chapter 2 of the tutorial.
+At this point I have a functional world where there are movable mobs and renderable player.
+I have also implemented a map generation and collision system.
 
 ## License
 
