@@ -5,7 +5,7 @@ on:
 name: Continuous integration
 
 concurrency:
-  group: ${{ github.head_ref }}
+  group: CI
   cancel-in-progress: true
 
 jobs:
