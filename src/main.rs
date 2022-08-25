@@ -127,6 +127,19 @@ fn new_map() -> Vec<TileType> {
         map[xy_idx(79, y)] = TileType::Wall;
     }
 
+    let mut rng = rltk::RandomNumberGenerator::new();
+
+    for _i in 0..400 {
+        let x = rng.roll_dice(1, 79);
+        let y = rng.roll_dice(1, 49);
+
+        let idx = xy_idx(x, y);
+
+        if idx != xy_idx(40, 25) {
+            map[idx] = TileType::Wall;
+        }
+    }
+
     map
 }
 
