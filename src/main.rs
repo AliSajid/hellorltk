@@ -9,8 +9,6 @@ struct State {
 
 impl State {
     fn run_systems(&mut self) {
-        let mut lw = LeftWalker {};
-        lw.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
@@ -47,26 +45,8 @@ struct Renderable {
     bg: RGB,
 }
 
-#[derive(Component)]
-struct LeftMover {}
-
 #[derive(Component, Debug)]
 struct Player {}
-
-struct LeftWalker {}
-
-impl<'a> System<'a> for LeftWalker {
-    type SystemData = (ReadStorage<'a, LeftMover>, WriteStorage<'a, Position>);
-
-    fn run(&mut self, (lefty, mut pos): Self::SystemData) {
-        for (_lefty, pos) in (&lefty, &mut pos).join() {
-            pos.x -= 1;
-            if pos.x < 0 {
-                pos.x = 79
-            }
-        }
-    }
-}
 
 #[derive(PartialEq, Clone, Copy)]
 enum TileType {
@@ -83,12 +63,9 @@ fn main() -> rltk::BError {
     gs.ecs.insert(new_map());
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
-    gs.ecs.register::<LeftMover>();
     gs.ecs.register::<Player>();
 
     gs = create_player(gs);
-
-    gs = create_mobs(gs, Some(11));
 
     rltk::main_loop(context, gs)
 }
@@ -105,25 +82,6 @@ fn create_player(mut gs: State) -> State {
         })
         .with(Player {})
         .build();
-    gs
-}
-
-fn create_mobs(mut gs: State, num: Option<i32>) -> State {
-    let n = num.unwrap_or(10);
-
-    // Create mob entities
-    for i in 1..=n {
-        gs.ecs
-            .create_entity()
-            .with(Position { x: i * 7, y: 20 })
-            .with(Renderable {
-                glyph: rltk::to_cp437('☺'),
-                fg: RGB::named(rltk::RED),
-                bg: RGB::named(rltk::BLACK),
-            })
-            .with(LeftMover {})
-            .build();
-    }
     gs
 }
 
