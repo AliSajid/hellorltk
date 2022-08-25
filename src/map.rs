@@ -1,7 +1,7 @@
 use rltk::{RandomNumberGenerator, Rltk, RGB};
 // use std::cmp::{max, min};
 
-#[derive(PartialEq, Clone, Copy)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub enum TileType {
     Wall,
     Floor,
