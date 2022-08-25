@@ -22,6 +22,9 @@ impl GameState for State {
         player_input(self, ctx);
         self.run_systems();
 
+        let map = self.ecs.fetch::<Vec<TileType>>();
+        draw_map(&map, ctx);
+
         let positions = self.ecs.read_storage::<Position>();
         let renderables = self.ecs.read_storage::<Renderable>();
 
@@ -65,12 +68,19 @@ impl<'a> System<'a> for LeftWalker {
     }
 }
 
+#[derive(PartialEq, Clone, Copy)]
+enum TileType {
+    Wall,
+    Floor,
+}
+
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
     let context = RltkBuilder::simple80x50()
         .with_title("Hello RLTK Roguelike")
         .build()?;
     let mut gs = State { ecs: World::new() };
+    gs.ecs.insert(new_map());
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<LeftMover>();
@@ -137,5 +147,57 @@ fn player_input(gs: &mut State, ctx: &mut Rltk) {
             VirtualKeyCode::Down => try_move_player(0, 1, &mut gs.ecs),
             _ => {}
         },
+    }
+}
+
+pub fn xy_idx(x: i32, y: i32) -> usize {
+    (y as usize * 80) + x as usize
+}
+
+fn new_map() -> Vec<TileType> {
+    // Create an empty All Floor map
+    let mut map = vec![TileType::Floor; 80 * 50];
+
+    // Boundary walls
+    for x in 0..80 {
+        map[xy_idx(x, 0)] = TileType::Wall;
+        map[xy_idx(x, 49)] = TileType::Wall;
+    }
+
+    for y in 0..50 {
+        map[xy_idx(0, y)] = TileType::Wall;
+        map[xy_idx(79, y)] = TileType::Wall;
+    }
+
+    map
+}
+
+fn draw_map(map: &[TileType], ctx: &mut Rltk) {
+    let mut x = 0;
+    let mut y = 0;
+
+    for tile in map.iter() {
+        match tile {
+            TileType::Floor => ctx.set(
+                x,
+                y,
+                RGB::from_f32(0.5, 0.5, 0.5),
+                RGB::from_f32(0., 0., 0.),
+                rltk::to_cp437('.'),
+            ),
+            TileType::Wall => ctx.set(
+                x,
+                y,
+                RGB::from_f32(0.5, 1., 0.5),
+                RGB::from_f32(0., 0., 0.),
+                rltk::to_cp437('#'),
+            ),
+        }
+
+        x += 1;
+        if x > 79 {
+            y += 1;
+            x = 0;
+        }
     }
 }
