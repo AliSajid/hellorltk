@@ -1,9 +1,12 @@
 {
     "cSpell.words": [
-        "codespell",
+        "clippy",
+        "MSRV",
         "Renderable",
         "renderables",
         "Rltk",
-        "Roguelike"
+        "Roguelike",
+        "rustfmt",
+        "RUSTTARGET"
     ]
 }
