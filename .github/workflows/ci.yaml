@@ -4,12 +4,11 @@ on:
 
 name: Continuous integration
 
-concurrency:
-  group: CI
-  cancel-in-progress: true
-
 jobs:
   ci:
+    concurrency:
+      group: ${{ matrix.os }}
+      cancel-in-progress: true
     runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
@@ -53,19 +52,19 @@ jobs:
 
       - name: Create Awesome Badge - Success
         uses: schneegans/dynamic-badges-action@v1.4.0
+        if: success()
         with:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: f490de4819ea0b8ef5e1732d17ecbbd7
           filename: ${{matrix.os}}.json
           label: Hello
           message: Succeeded
-          if: success()
       - name: Create Awesome Badge - Failure
         uses: schneegans/dynamic-badges-action@v1.4.0
+        if: failure()
         with:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: f490de4819ea0b8ef5e1732d17ecbbd7
           filename: ${{matrix.os}}.json
           label: Hello
           message: Failed
-          if: failure()
