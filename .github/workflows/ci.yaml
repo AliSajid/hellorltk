@@ -4,11 +4,12 @@ on:
 
 name: Continuous integration
 
+concurrency:
+  cancel-in-progress: true
+  group: CI
+
 jobs:
   ci:
-    concurrency:
-      group: ${{ matrix.os }}
-
     runs-on: ${{ matrix.os }}-latest
     strategy:
       max-parallel: 4
@@ -22,6 +23,21 @@ jobs:
           - ubuntu
           - windows
           - macos
+        include:
+          - os: macos
+            logo: apple
+          - os: windows
+            logo: windows
+          - os: ubuntu
+            logo: ubuntu
+          - rust: 1.56.1
+            label: msrv
+          - rust: nightly
+            label: nightly
+          - rust: beta
+            label: beta
+          - rust: stable
+            label: stable
 
     steps:
       - uses: actions/checkout@v2
@@ -57,15 +73,20 @@ jobs:
         with:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: f490de4819ea0b8ef5e1732d17ecbbd7
-          filename: ${{matrix.os}}.json
-          label: Hello
+          filename: ${{matrix.os}}-${{matrix.label}}.json
+          label: Build
+          namedLogo: ${{matrix.logo}}
           message: Succeeded
+          color: green
+
       - name: Create Awesome Badge - Failure
         uses: schneegans/dynamic-badges-action@v1.4.0
         if: failure()
         with:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: f490de4819ea0b8ef5e1732d17ecbbd7
-          filename: ${{matrix.os}}.json
-          label: Hello
+          filename: ${{matrix.os}}-${{matrix.label}}.json
+          namedLogo: ${{matrix.logo}}
+          label: Build
           message: Failed
+          isError: true
