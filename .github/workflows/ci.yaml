@@ -59,7 +59,7 @@ jobs:
           filename: ${{matrix.os}}.json
           label: Hello
           message: Succeeded
-          if: ${{success()}}
+          if: success()
       - name: Create Awesome Badge - Failure
         uses: schneegans/dynamic-badges-action@v1.4.0
         with:
@@ -68,4 +68,4 @@ jobs:
           filename: ${{matrix.os}}.json
           label: Hello
           message: Failed
-          if: ${{failure()}}          
+          if: failure()
