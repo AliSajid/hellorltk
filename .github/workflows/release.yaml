@@ -17,15 +17,12 @@ jobs:
           - target: x86_64-pc-windows-gnu
             archive: zip
             platform: windows_x86_64
-            extension: zip
           - target: x86_64-unknown-linux-musl
-            archive: tar.gz
+            archive: tar.gz tar.bz2 tar.xz
             platform: linux_x86_64
-            extension: tar.gz
           - target: x86_64-apple-darwin
             archive: zip
             platform: macos_x86_64
-            extension: zip
     steps:
       - uses: actions/checkout@master
       - name: Compile and release
@@ -36,5 +33,5 @@ jobs:
           MINIFY: true
           RUSTTARGET: ${{ matrix.target }}
           ARCHIVE_TYPES: ${{ matrix.archive }}
-          ARCHIVE_NAME: HelloRLTK-${{ github.event.release.tag_name }}-${{matrix.platform}}.${{matrix.extension}}
+          ARCHIVE_NAME: HelloRLTK-${{ github.event.release.tag_name }}-${{matrix.platform}}
           EXTRA_FILES: "README.md LICENSE"
