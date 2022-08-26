@@ -1,3 +1,9 @@
+## v1.8.2 (2022-08-26)
+
+### Fix
+
+- more markdownlint cuztomization
+
 ## v1.8.1 (2022-08-26)
 
 ### Fix

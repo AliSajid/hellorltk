@@ -1,7 +1,7 @@
 [tool]
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "1.8.1"
+version = "1.8.2"
 tag_format = "v$version"
 gpg_sign = true
 version_files = ["Cargo.toml"]
