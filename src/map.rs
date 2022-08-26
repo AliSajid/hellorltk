@@ -1,4 +1,5 @@
 use super::Rect;
+#[allow(unused_imports)]
 use rltk::{RandomNumberGenerator, Rltk, Tile, RGB};
 use std::cmp::{max, min};
 
@@ -12,6 +13,7 @@ pub fn xy_idx(x: i32, y: i32) -> usize {
     (y as usize * 80) + x as usize
 }
 
+#[allow(dead_code)]
 pub fn new_map_test() -> Vec<TileType> {
     // Create an empty All Floor map
     let mut map = vec![TileType::Floor; 80 * 50];
