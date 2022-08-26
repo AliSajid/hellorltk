@@ -1,6 +1,6 @@
 on:
   release:
-    types: [created]
+    types: [published]
   workflow_dispatch:
     
 
@@ -13,7 +13,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [x86_64-pc-windows-gnu, x86_64-unknown-linux-musl, wasm32-wasi, x86_64-apple-darwin]
+        include:
+          - target: x86_64-pc-windows-gnu
+            archive: zip
+            platform: windows_x86_64
+            extension: zip
+          - target: x86_64-unknown-linux-musl
+            archive: tar.gz
+            platform: linux_x86_64
+            extension: tar.gz
+          - target: x86_64-apple-darwin
+            archive: zip
+            platform: macos_x86_64
+            extension: zip
     steps:
       - uses: actions/checkout@master
       - name: Compile and release
@@ -21,5 +33,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          MINIFY: true
           RUSTTARGET: ${{ matrix.target }}
+          ARCHIVE_TYPES: ${{ matrix.archive }}
+          ARCHIVE_NAME: HelloRLTK-${{ github.event.release.tag_name }}-${{matrix.platform}}.${{matrix.extension}}
           EXTRA_FILES: "README.md LICENSE"
