@@ -8,8 +8,11 @@ jobs:
   ci:
     concurrency:
       group: ${{ matrix.os }}
+      cancel-in-progress: true
+
     runs-on: ${{ matrix.os }}-latest
     strategy:
+      max-parallel: 4
       matrix:
         rust:
           - stable
