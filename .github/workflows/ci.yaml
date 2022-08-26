@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   ci:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
         rust:
@@ -19,9 +19,9 @@ jobs:
           - nightly
           - 1.56.1  # MSRV
         os:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
+          - ubuntu
+          - windows
+          - macos
 
     steps:
       - uses: actions/checkout@v2
@@ -50,3 +50,22 @@ jobs:
         with:
           command: clippy
           args: -- -D warnings
+
+      - name: Create Awesome Badge - Success
+        uses: schneegans/dynamic-badges-action@v1.4.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: f490de4819ea0b8ef5e1732d17ecbbd7
+          filename: ${{matrix.os}}.json
+          label: Hello
+          message: Succeeded
+          if: ${{success()}}
+      - name: Create Awesome Badge - Failure
+        uses: schneegans/dynamic-badges-action@v1.4.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: f490de4819ea0b8ef5e1732d17ecbbd7
+          filename: ${{matrix.os}}.json
+          label: Hello
+          message: Failed
+          if: ${{failure()}}          
